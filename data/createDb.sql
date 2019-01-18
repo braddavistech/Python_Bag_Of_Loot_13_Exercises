@@ -1,4 +1,4 @@
--- sqlite3 santa.db < createdb.sql
+-- sqlite3 bagOfLoot.db < createdb.sql
 
 create table "Children" (
 	"ChildId" integer not null primary key autoincrement,
@@ -10,9 +10,6 @@ create table "Gifts" (
 	"GiftId" integer not null primary key autoincrement,
 	"Name" string not null,
 	"Delivered" integer not null,
-	"Month" string not null,
-	"Day" string not null,
-	"Year" string not null,
 	"ChildId" integer not null,
 	foreign key ("ChildId")
 	References "Children" ("ChildId")
