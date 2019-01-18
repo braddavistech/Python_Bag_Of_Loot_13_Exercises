@@ -1,7 +1,7 @@
 import sys
 import sqlite3
 
-nice_list = '/Users/braddavis/workspace/python/exercises/bagOfLoot/testing/data/bagOfLoot.db'
+nice_list = '/Users/braddavis/workspace/python/exercises/bagOfLoot/testing/data/testing.db'
 
 
 # Main handler for inputs from CLI
@@ -46,7 +46,7 @@ def handleInputs():
 # Add gift to a child
   if method_request == "ADD":
     temp = santa.checkChild(second)
-    santa.add_gift(temp[0], first)
+    santa.add_gift(temp[0], first, temp[2], temp[1])
 
 # Remove gift from a child
   if method_request == "REMOVE":
@@ -153,30 +153,43 @@ def handleInputs():
 class SantasBag():
 
   # Adds gift to database
-  def add_gift(self, childId, gifts):
-    with sqlite3.connect(nice_list) as connectData:
-      cursor = connectData.cursor()
-      try:
-        cursor.execute(
-            '''
-            Insert Into Gifts
-              Values(?, ?, ?, ?)
-            ''', (None, gifts, 0, childId)
-        )
-        print()
-        print("----------------------------------")
-        print("---------  Gift Added  ---------")
-        print("----------------------------------")
-        print()
-        print(f"Successfully added {gifts} to child's list.'")
-        print()
-        print("-----------------------------------")
-        print("-----------------------------------")
-        print("-----------------------------------")
-        print()
-      except ValueError as err:
-        print(f"Error: {err}")
-        print()
+  def add_gift(self, childId, gifts, status, name):
+    if status == "NICE":
+      with sqlite3.connect(nice_list) as connectData:
+        cursor = connectData.cursor()
+        try:
+          cursor.execute(
+              '''
+              Insert Into Gifts
+                Values(?, ?, ?, ?)
+              ''', (None, gifts, 0, childId)
+          )
+          print()
+          print("----------------------------------")
+          print("---------  Gift Added  ---------")
+          print("----------------------------------")
+          print()
+          print(f"Successfully added {gifts} to child's list.'")
+          print()
+          print("-----------------------------------")
+          print("-----------------------------------")
+          print("-----------------------------------")
+          print()
+        except ValueError as err:
+          print(f"Error: {err}")
+          print()
+    else:
+      print()
+      print("**********************************")
+      print("********  Add Gift Alert  ********")
+      print("**********************************")
+      print()
+      print(f"{name} is on the Naughty List. Bad kids don't get presents.")
+      print()
+      print("**********************************")
+      print("**********************************")
+      print("**********************************")
+      print()
 
 
   # Removes gift from database

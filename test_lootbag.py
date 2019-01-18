@@ -26,7 +26,6 @@ class TestSantasBag(unittest.TestCase):
     santa = SantasBag()
     print(f"Test of Class Creation: {self}")
     self.assertIsInstance(santa, SantasBag)
-    print()
 
 
   # Check child exists and if not, create child
@@ -35,40 +34,31 @@ class TestSantasBag(unittest.TestCase):
     temp = santa.checkChild("Brad")
     print(f"Test of Adding New Child: {temp}")
     self.assertEqual(temp, (1, "Brad", "NICE"))
-    print()
 
 
   # Add gift test
   def test_add_gift(self):
-    santa = SantasBag()
-    temp = santa.checkChild("Tom")
-    santa.add_gift(1,"Piano", "NICE", "Brad")
-    santa.add_gift(2, "Bear", "NICE", "Tom")
-    temp = santa.checkGift("Bear", 2)
+    bob = SantasBag()
+    bob.add_gift(1, "Piano", "NICE", "Brad")
+    temp = bob.checkGift("Piano", 1)
     print(f"Test of Addding Gift to Child: {temp}")
-    self.assertEqual(temp, (2, "Bear", 0, 2, 2, "Tom", "NICE"))
-    print()
+    # self.assertEqual(bob, ["Piano", "Dress", "Make Up"] )
 
 
   # Removing gifts test
-  def test_remove_gift(self):
-    santa = SantasBag()
-    temp = santa.checkGift("Piano", 1)
-    self.assertNotEqual(temp, None)
-    santa.remove_gift([1, "Piano"])
-    temp = santa.checkGift("Piano", 1)
-    print(f"Test of Removing Gift from child: {temp}")
-    self.assertEqual(temp, None)
-    print()
+  # def test_remove_gift(self):
+  #   bob = SantasBag()
+  #   bob.add_gift("suzie", "piano", "dress", "make Up")
+  #   bob.remove_gift("suzie", "dress")
+  #   self.assertEqual(bob.gifts[0], ["Piano", "Make Up"])
 
-  # Check name exists
-  def test_check_name(self):
-    bob = SantasBag()
-    temp = bob.checkName("Brad")
-    print(f"Test of name exists: {temp}")
-    self.assertEqual(temp, (1, "Brad", "NICE"))
-    self.assertNotEqual(temp, (2, "Brad", "NICE"))
-    print()
+  # Removing gifts test
+  # def test_deliver_gifts(self):
+  #   bob = SantasBag()
+  #   bob.add_gift("suzie", "piano", "dress", "make Up")
+  #   bob.deliver_gifts("suzie", 12, "Tuesday", 2018)
+  #   print(bob.delivery_status)
+    # self.assertEqual(bob.gifts[0], ["Piano", "Make Up"])
 
 
 
