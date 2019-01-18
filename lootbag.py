@@ -1,7 +1,7 @@
 import sys
 import sqlite3
 
-nice_list = '/Users/braddavis/workspace/python/exercises/bagOfLoot/testing/data/bagOfLoot.db'
+nice_list = '/Users/braddavis/workspace/python/exercises/bagOfLoot/testing/data/testing.db'
 
 
 # Main handler for inputs from CLI
