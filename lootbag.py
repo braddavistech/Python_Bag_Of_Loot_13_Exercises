@@ -3,6 +3,7 @@ import sqlite3
 
 nice_list = '/Users/braddavis/workspace/python/exercises/bagOfLoot/testing/data/santa.db'
 
+# Checks if child exists and if not, adds to the database
 def checkChild(name):
   with sqlite3.connect(nice_list) as taco:
       cursor = taco.cursor()
@@ -25,10 +26,12 @@ def checkChild(name):
                          ''')
           child_check = cursor.fetchone()
           return child_check
-        return child_check
       except sqlite3.OperationalError as err:
         print("error", err)
+        print()
 
+
+# Checks if a child exists in db by name
 def checkName(name):
   with sqlite3.connect(nice_list) as taco:
       cursor = taco.cursor()
@@ -37,11 +40,13 @@ def checkName(name):
                          FROM Children c
                          Where c.Name = '{name}'
                          ''')
-        child_check = cursor.fetchone()
-        return child_check
+        name_check = cursor.fetchone()
+        return name_check
       except sqlite3.OperationalError as err:
         print("error", err)
+        print()
 
+# Checks if existing child has a gift with given name
 def checkGift(name, childId):
   with sqlite3.connect(nice_list) as taco:
       cursor = taco.cursor()
@@ -49,14 +54,15 @@ def checkGift(name, childId):
         cursor.execute(f'''SELECT *
                           FROM Gifts g
                           Join Children c
-                          On c.ChildId = "{childId}"
+                          On c.ChildId = g.ChildId
                           Where g.Name = "{name}"
+                          And c.childId = {childId}
                          ''')
         gift_check = cursor.fetchone()
-        print(gift_check)
         return gift_check
       except sqlite3.OperationalError as err:
         print("error", err)
+        print()
         temp = "None"
         return temp
 
@@ -68,33 +74,22 @@ def handleInputs():
 
   if method_request == "ADD":
     santa = SantasBag()
-    print("inside add")
-    temp = checkChild(first)
-    childId = temp[0]
-    childName = temp[1]
-    print(f"Child Id: {childId} Child Name: {childName}")
-    santa.add_gift(childId, childName, second)
+    temp = checkChild(second)
+    santa.add_gift(temp[0], first)
 
   if method_request == "REMOVE":
     santa = SantasBag()
-    print("inside remove")
     temp = checkName(first)
-    print(f"Temp: {temp}")
     if temp == None:
       print(f"There is no child by the name of {first} in our system.")
+      print()
     else:
-      childId = temp[0]
-      childName = temp[1]
-      gift = checkGift(second, childId)
+      gift = checkGift(second, temp[0])
       if gift == None:
-        print(f"{childName} doesn't have a {second} on their list. Please try again.")
+        print(f"{temp[1]} doesn't have a {second} on their list. Please try again.")
+        print()
       else:
         santa.remove_gift(gift)
-
-    # santa.add_gift(childId, childName, second)
-
-
-  # if method_request == "REMOVE":
 
 
 
@@ -106,7 +101,8 @@ class SantasBag():
     self.delivery_status = []
 
 
-  def add_gift(self, childId, name, gifts):
+  # Adds gift to database
+  def add_gift(self, childId, gifts):
     with sqlite3.connect(nice_list) as taco:
       cursor = taco.cursor()
       try:
@@ -118,28 +114,23 @@ class SantasBag():
         )
       except ValueError as err:
         print(f"Error: {err}")
+        print()
 
 
+  # Removes gift from database
   def remove_gift(self, gift):
     giftId = gift[0]
-    giftName = gift[1]
-    child_name = gift[8]
-    print(f"Gift ID: {giftId}, Gift Name: {giftName}, Child Name: {child_name}")
-    # try:
-    #   index = self.children.index(name)
-    #   if self.delivery_status[index][0] == False:
-    #     try:
-    #       gift_position = self.gifts[index].index(gift)
-    #       del self.gifts[index][gift_position]
-    #     except ValueError:
-    #       print(f"{name} isn't scheduled to recieve a(n) {gift}.")
-    #       print()
-    #   else:
-    #     print(f"{name} recieved their gifts on {self.delivery_status[index][1][0]}/{self.delivery_status[index][1][1]}/{self.delivery_status[index][1][2]} so you are unable to remove their gifts.")
-    #     print()
-    # except ValueError:
-    #   print(f"There is no child with the name of {name} in our system.")
-    #   print()
+    with sqlite3.connect(nice_list) as taco:
+      cursor = taco.cursor()
+      try:
+        cursor.execute(f'''DELETE from Gifts
+                          Where Gifts.GiftId = {giftId}
+                        ''')
+        print(f"Successfully removed {gift[1]} from child.")
+        print()
+      except ValueError as err:
+        print(f"Delete Error: {err}")
+        print()
 
 
   def naughty(self, name):
